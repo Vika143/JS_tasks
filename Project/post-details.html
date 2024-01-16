@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <style>
+        body{
+            display: grid;
+            background-color: darkgray;
+        }
+        #post{
+            display: grid;
+            justify-content: center;
+            align-items: center;
+            font-size: 30px;
+            border: 1px solid lightslategrey;
+        }
+        #comments{
+            display: grid;
+            grid-template-columns: repeat(4,1fr);
+            grid-gap: 5px;
+            margin-top: 5px;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+<div id ="post"></div>
+<div id ="comments"></div>
+
+
+
+<script>
+    let parameters = new URLSearchParams(window.location.search)
+        let postId = parameters.get('postId');
+    let postSection = document.getElementById("post");
+    fetch(`https://jsonplaceholder.typicode.com/posts/${postId}`)
+        .then (response => response.json())
+        .then (post => {
+            let postDetail = document.createElement('div');
+            postDetail.innerText = `
+            title: ${post.title};
+            body: ${post.body};
+            `
+            postSection.appendChild(postDetail);
+        });
+        let commentsSection = document.getElementById("comments");
+            fetch(`https://jsonplaceholder.typicode.com/posts/${postId}/comments`)
+                .then(response => response.json())
+                .then(comments => {
+                    comments.forEach(comment => {
+                        let commentPost = document.createElement('div');
+                        commentPost.innerText = `
+                        Name: ${comment.name}
+                        Email:${comment.email}
+                        Comment:${comment.body}
+                        `;
+                        commentsSection.appendChild(commentPost);
+                    });
+                });
+
+</script>
+</body>
+</html>
